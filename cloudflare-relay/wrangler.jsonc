@@ -23,11 +23,9 @@
       "tag": "v1",
       "new_sqlite_classes": ["NostrRelayDO", "TunnelRoomDO"]
     }
+  ],
+  "routes": [
+    { "pattern": "relay.gfmm.eu/*", "zone_name": "gfmm.eu" },
+    { "pattern": "gfmm.eu/nopenwrtremote*", "zone_name": "gfmm.eu" }
   ]
-  // Odkomentuj poniższe trasy przed wdrożeniem produkcyjnym na domenę gfmm.eu:
-  // ,
-  // "routes": [
-  //   { "pattern": "relay.gfmm.eu/*", "zone_name": "gfmm.eu" },
-  //   { "pattern": "gfmm.eu/nopenwrtremote*", "zone_name": "gfmm.eu" }
-  // ]
 }
