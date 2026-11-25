@@ -31,10 +31,10 @@ var callRevokePeer = rpc.declare({
 });
 
 function loadQrScript() {
-	if (window.NortQrCode) return Promise.resolve();
+	if (window.NortQrCode && typeof window.NortQrCode.encode === 'function') return Promise.resolve();
 	return new Promise(function (resolve, reject) {
 		var s = document.createElement('script');
-		s.src = L.resource('nopenwrtremote/qrcode.js');
+		s.src = L.resource('nopenwrtremote/qrcode.js') + '?v=2';
 		s.onload = resolve;
 		s.onerror = function () { reject(new Error('Nie udało się załadować qrcode.js')); };
 		document.head.appendChild(s);
@@ -51,6 +51,11 @@ return view.extend({
 	},
 
 	handleStartPairing: function (qrBox) {
+		var self = this;
+		if (self._pairTimer) {
+			window.clearInterval(self._pairTimer);
+			self._pairTimer = null;
+		}
 		return callStartPairing().then(function (res) {
 			if (!res || !res.pair_uri) {
 				ui.addNotification(null, E('p', _('Agent nOpenWrtRemote nie odpowiada. Sprawdź czy usługa jest uruchomiona.')), 'error');
@@ -59,15 +64,16 @@ return view.extend({
 			dom.content(qrBox, '');
 			var svgContainer = E('div', { 'style': 'margin:12px 0;padding:12px;background:#fff;display:inline-block;border-radius:8px;border:1px solid #cbd5e1;' });
 			if (window.NortQrCode) {
-				svgContainer.innerHTML = window.NortQrCode.renderSvg(res.pair_uri, 240);
+				svgContainer.innerHTML = window.NortQrCode.renderSvg(res.pair_uri, 280);
 			}
-			var countdown = E('strong', { 'style': 'color:#0284c7;' }, '300 s');
+			var countdown = E('strong', { 'style': 'background:#ffffff;color:#0369a1;padding:2px 6px;border-radius:4px;' }, '300 s');
 			var expiresAt = res.expires_at ? (res.expires_at * 1000) : (Date.now() + 300000);
-			var timer = window.setInterval(function () {
+			self._pairTimer = window.setInterval(function () {
 				var left = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
 				countdown.textContent = left + ' s';
 				if (left <= 0) {
-					window.clearInterval(timer);
+					window.clearInterval(self._pairTimer);
+					self._pairTimer = null;
 					countdown.textContent = _('Wygasł — wygeneruj ponownie');
 				}
 			}, 1000);

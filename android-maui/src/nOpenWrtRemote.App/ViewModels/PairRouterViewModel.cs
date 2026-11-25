@@ -48,10 +48,10 @@ public partial class PairRouterViewModel : ObservableObject
         await PairWithUriAsync(ManualUri);
     }
 
-    public async Task PairWithUriAsync(string rawUri)
+    public async Task<bool> PairWithUriAsync(string rawUri)
     {
         if (IsBusy || string.IsNullOrWhiteSpace(rawUri))
-            return;
+            return false;
 
         IsBusy = true;
         try
@@ -63,10 +63,12 @@ public partial class PairRouterViewModel : ObservableObject
             await _store.UpsertRouterAsync(profile);
             StatusMessage = $"Sparowano pomyślnie z {profile.Name}!";
             await Shell.Current.GoToAsync("..");
+            return true;
         }
         catch (Exception ex)
         {
             StatusMessage = $"Błąd parowania: {ex.Message}";
+            return false;
         }
         finally
         {

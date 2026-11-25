@@ -10,9 +10,10 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="16" Spacing="14">
-      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" HeightRequest="280">
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" HeightRequest="300">
         <zxing:CameraBarcodeReaderView x:Name="BarcodeReader"
-                                       IsDetecting="True"
+                                       IsDetecting="False"
+                                       CameraLocation="Rear"
                                        BarcodesDetected="OnBarcodesDetected" />
       </Border>
 

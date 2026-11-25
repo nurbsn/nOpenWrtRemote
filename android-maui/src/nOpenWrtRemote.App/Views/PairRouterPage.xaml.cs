@@ -17,7 +17,9 @@ public partial class PairRouterPage : ContentPage
         {
             Formats = BarcodeFormat.QrCode,
             AutoRotate = true,
-            Multiple = false
+            Multiple = false,
+            TryHarder = true,
+            TryInverted = true
         };
     }
 
@@ -33,6 +35,7 @@ public partial class PairRouterPage : ContentPage
         }
         else
         {
+            BarcodeReader.IsDetecting = false;
             BarcodeReader.IsDetecting = true;
         }
     }
@@ -47,15 +50,29 @@ public partial class PairRouterPage : ContentPage
     {
         if (_handledQr) return;
         string? raw = e.Results?.FirstOrDefault()?.Value;
-        if (string.IsNullOrWhiteSpace(raw) || !raw.StartsWith("nopenwrt://pair", StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(raw))
             return;
+
+        if (!raw.StartsWith("nopenwrt://pair", StringComparison.OrdinalIgnoreCase))
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _vm.StatusMessage = "Wykryto inny kod QR (nie jest to kod parowania nOpenWrtRemote).";
+            });
+            return;
+        }
 
         _handledQr = true;
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             BarcodeReader.IsDetecting = false;
             _vm.ManualUri = raw;
-            await _vm.PairWithUriAsync(raw);
+            bool ok = await _vm.PairWithUriAsync(raw);
+            if (!ok)
+            {
+                _handledQr = false;
+                BarcodeReader.IsDetecting = true;
+            }
         });
     }
 }
