@@ -335,8 +335,12 @@ public sealed class LocalLuciProxyServer : IAsyncDisposable
         if (reqLine.Length < 2) return null;
         string method = reqLine[0].ToUpperInvariant();
         string rawTarget = reqLine[1];
-        if (Uri.TryCreate(rawTarget, UriKind.Absolute, out var abs))
+        if ((rawTarget.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+             rawTarget.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) &&
+            Uri.TryCreate(rawTarget, UriKind.Absolute, out var abs))
+        {
             rawTarget = abs.PathAndQuery;
+        }
         if (!rawTarget.StartsWith('/')) rawTarget = "/" + rawTarget;
 
         var headers = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);

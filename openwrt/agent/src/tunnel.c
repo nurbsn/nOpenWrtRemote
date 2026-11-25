@@ -12,7 +12,17 @@
 #include <string.h>
 #include <strings.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <unistd.h>
+
+static const char *find_str_ci(const char *haystack, const char *needle) {
+    size_t nlen = strlen(needle);
+    if (nlen == 0) return haystack;
+    for (const char *p = haystack; *p; p++) {
+        if (strncasecmp(p, needle, nlen) == 0) return p;
+    }
+    return NULL;
+}
 
 #define MAX_PENDING_STREAMS 64
 #define MAX_HTTP_BODY_BYTES (16u * 1024u * 1024u)
@@ -236,7 +246,7 @@ static void handle_ubus_req(nort_ws_t *ws, nort_tunnel_crypto_t *tc, const char 
     size_t resp_body_len = raw_len - (hdr_len + 4);
 
     *sep = '\0';
-    if (strcasestr((char *)raw, "Transfer-Encoding: chunked")) {
+    if (find_str_ci((char *)raw, "Transfer-Encoding: chunked")) {
         uint8_t *decoded = NULL;
         size_t decoded_len = 0;
         if (decode_chunked_body(resp_body, resp_body_len, &decoded, &decoded_len) == 0) {
@@ -358,7 +368,7 @@ static void handle_http_stream(
     size_t resp_body_len = raw_len - (hdr_len + 4);
     *sep = '\0';
 
-    bool is_chunked = strcasestr((char *)raw, "Transfer-Encoding: chunked") != NULL;
+    bool is_chunked = find_str_ci((char *)raw, "Transfer-Encoding: chunked") != NULL;
 
     struct json_object *res_meta = json_object_new_object();
     struct json_object *res_headers = json_object_new_object();

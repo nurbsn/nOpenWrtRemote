@@ -14,7 +14,7 @@
 #include <mbedtls/md.h>
 #include <mbedtls/sha256.h>
 #include <mbedtls/version.h>
-#if defined(MBEDTLS_PSA_CRYPTO_C)
+#if MBEDTLS_VERSION_NUMBER >= 0x03000000 && defined(MBEDTLS_PSA_CRYPTO_C)
 #include <psa/crypto.h>
 #endif
 
@@ -26,7 +26,7 @@
 static secp256k1_context *g_secp_ctx = NULL;
 
 int nort_crypto_init(void) {
-#if defined(MBEDTLS_PSA_CRYPTO_C)
+#if MBEDTLS_VERSION_NUMBER >= 0x03000000 && defined(MBEDTLS_PSA_CRYPTO_C)
     if (psa_crypto_init() != PSA_SUCCESS) {
         return -1;
     }

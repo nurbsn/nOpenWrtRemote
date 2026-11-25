@@ -11,6 +11,7 @@
 #include <string.h>
 #include <strings.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -197,7 +198,7 @@ int nort_ws_connect(const char *url, int timeout_ms, nort_ws_t **out_ws) {
         int ca_loaded = 0;
         if (mbedtls_x509_crt_parse_file(&ws->cacert, "/etc/ssl/certs/ca-certificates.crt") == 0) ca_loaded = 1;
         else if (mbedtls_x509_crt_parse_file(&ws->cacert, "/etc/ssl/cert.pem") == 0) ca_loaded = 1;
-        else if (mbedtls_x509_crt_parse_path(&ws->cacert, "/etc/ssl/certs") > 0) ca_loaded = 1;
+        else if (mbedtls_x509_crt_parse_path(&ws->cacert, "/etc/ssl/certs") >= 0) ca_loaded = 1;
         if (!ca_loaded) {
             nort_ws_close(ws);
             return -1;

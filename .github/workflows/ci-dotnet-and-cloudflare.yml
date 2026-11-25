@@ -32,5 +32,6 @@ jobs:
           dotnet-version: '10.0.x'
       - run: dotnet test tests/nOpenWrtRemote.Core.Tests/nOpenWrtRemote.Core.Tests.csproj -c Release
       - run: dotnet build src/nOpenWrtRemote.MockRouter/nOpenWrtRemote.MockRouter.csproj -c Release
-      - run: dotnet workload install maui-android
-      - run: dotnet build src/nOpenWrtRemote.App/nOpenWrtRemote.App.csproj -f net10.0-android -c Release
+      - run: sudo dotnet workload install maui-android
+      - run: dotnet build src/nOpenWrtRemote.App/nOpenWrtRemote.App.csproj -t:InstallAndroidDependencies -f net10.0-android -c Release -p:AndroidSdkDirectory="${ANDROID_HOME}" -p:AcceptAndroidSDKLicenses=true
+      - run: dotnet build src/nOpenWrtRemote.App/nOpenWrtRemote.App.csproj -f net10.0-android -c Release -p:AndroidSdkDirectory="${ANDROID_HOME}" -p:AcceptAndroidSDKLicenses=true

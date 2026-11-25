@@ -34,11 +34,11 @@ jobs:
       fail-fast: false
       matrix:
         sdk:
-          - x86-64-24.10
-          - mediatek-filogic-24.10
-          - ramips-mt7621-24.10
-          - ath79-generic-24.10
-          - ipq40xx-generic-24.10
+          - x86-64-24.10.8
+          - mediatek-filogic-24.10.8
+          - ramips-mt7621-24.10.8
+          - ath79-generic-24.10.8
+          - ipq40xx-generic-24.10.8
     steps:
       - uses: actions/checkout@v4
       - name: Build .ipk via OpenWrt 24.10 SDK
