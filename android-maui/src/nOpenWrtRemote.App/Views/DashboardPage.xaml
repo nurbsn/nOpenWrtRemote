@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:nOpenWrtRemote.App.ViewModels"
+             x:Class="nOpenWrtRemote.App.Views.DashboardPage"
+             x:DataType="vm:DashboardViewModel"
+             Title="{Binding RouterName}"
+             BackgroundColor="#0B1120">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="16" Spacing="12">
+      <Border BackgroundColor="#052E16" Stroke="#166534" StrokeShape="RoundRectangle 12" Padding="12">
+        <Grid ColumnDefinitions="*,Auto">
+          <Label Text="{Binding StatusBanner}" TextColor="#4ADE80" FontAttributes="Bold" VerticalOptions="Center" />
+          <Label Grid.Column="1" Text="{Binding LatencyText}" TextColor="#86EFAC" FontSize="12" VerticalOptions="Center" />
+        </Grid>
+      </Border>
+
+      <Button Text="Otwórz pełne LuCI (E2EE)"
+              BackgroundColor="#38BDF8" TextColor="#0B1120" FontAttributes="Bold" FontSize="16"
+              HeightRequest="54" CornerRadius="14"
+              Command="{Binding OpenFullLuciCommand}" />
+
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" Padding="16">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="System OpenWrt" FontSize="15" FontAttributes="Bold" TextColor="White" />
+          <Label Text="{Binding Model, StringFormat='Model: {0}'}" TextColor="#CBD5E1" />
+          <Label Text="{Binding Release, StringFormat='Wersja: {0}'}" TextColor="#CBD5E1" />
+          <Label Text="{Binding Uptime, StringFormat='Czas pracy: {0}'}" TextColor="#CBD5E1" />
+          <Label Text="{Binding Load, StringFormat='Obciążenie CPU (1m / 5m): {0}'}" TextColor="#CBD5E1" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" Padding="16">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="Pamięć RAM" FontSize="15" FontAttributes="Bold" TextColor="White" />
+          <Label Text="{Binding RamSummary}" TextColor="#CBD5E1" />
+          <ProgressBar Progress="{Binding RamProgress}" ProgressColor="#38BDF8" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" Padding="16">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="Sieć WAN i klienci" FontSize="15" FontAttributes="Bold" TextColor="White" />
+          <Label Text="{Binding WanStatus, StringFormat='WAN: {0}'}" TextColor="#CBD5E1" />
+          <Label Text="{Binding ClientsCount, StringFormat='Znane hosty / klienci: {0}'}" TextColor="#CBD5E1" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+        <Button Grid.Column="0" Text="Odśwież ubus" BackgroundColor="#1E293B" TextColor="White" CornerRadius="12"
+                Command="{Binding LoadTelemetryCommand}" />
+        <Button Grid.Column="1" Text="Rozłącz tunel" BackgroundColor="#7F1D1D" TextColor="White" CornerRadius="12"
+                Command="{Binding DisconnectCommand}" />
+      </Grid>
+
+      <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#38BDF8" />
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

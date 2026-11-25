@@ -1,0 +1,51 @@
+name: Build OpenWrt C11 Packages (.ipk)
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-c-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build & crypto dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build pkg-config libmbedtls-dev libjson-c-dev
+      - name: Configure & build C11 agent + tests
+        working-directory: openwrt/agent
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DNORT_BUILD_TESTS=ON
+          cmake --build build
+          strip build/nopenwrtremote-agent
+          ls -lh build/nopenwrtremote-agent
+      - name: Run C11 crypto & framing tests
+        working-directory: openwrt/agent
+        run: ctest --test-dir build --output-on-failure
+
+  build-openwrt-ipk:
+    needs: test-c-agent
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk:
+          - x86-64-24.10
+          - mediatek-filogic-24.10
+          - ramips-mt7621-24.10
+          - ath79-generic-24.10
+          - ipq40xx-generic-24.10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build .ipk via OpenWrt 24.10 SDK
+        run: |
+          chmod +x openwrt/scripts/build-ipk.sh
+          ./openwrt/scripts/build-ipk.sh "${{ matrix.sdk }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-ipk-${{ matrix.sdk }}
+          path: openwrt/dist/${{ matrix.sdk }}/*.ipk

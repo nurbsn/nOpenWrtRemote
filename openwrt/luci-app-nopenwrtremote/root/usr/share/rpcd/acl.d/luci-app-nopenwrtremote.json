@@ -1,0 +1,17 @@
+{
+  "luci-app-nopenwrtremote": {
+    "description": "Grant LuCI access to nOpenWrtRemote pairing and status",
+    "read": {
+      "ubus": {
+        "luci.nopenwrtremote": [ "status", "list_peers" ]
+      },
+      "uci": [ "nopenwrtremote" ]
+    },
+    "write": {
+      "ubus": {
+        "luci.nopenwrtremote": [ "start_pairing", "revoke_peer" ]
+      },
+      "uci": [ "nopenwrtremote" ]
+    }
+  }
+}

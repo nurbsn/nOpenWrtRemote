@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:vm="clr-namespace:nOpenWrtRemote.App.ViewModels"
+             x:Class="nOpenWrtRemote.App.Views.PairRouterPage"
+             x:DataType="vm:PairRouterViewModel"
+             Title="Parowanie routera"
+             BackgroundColor="#0B1120">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="16" Spacing="14">
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" HeightRequest="280">
+        <zxing:CameraBarcodeReaderView x:Name="BarcodeReader"
+                                       IsDetecting="True"
+                                       BarcodesDetected="OnBarcodesDetected" />
+      </Border>
+
+      <Label Text="{Binding StatusMessage}" TextColor="#38BDF8" FontSize="13" />
+      <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#38BDF8" />
+
+      <Label Text="Nazwa tego urządzenia (widoczna w LuCI):" TextColor="#CBD5E1" FontSize="13" />
+      <Entry Text="{Binding DeviceName}" BackgroundColor="#111A2E" TextColor="White" Placeholder="np. Pixel 9" />
+
+      <Label Text="Lub wklej URI parowania (nopenwrt://pair?...):" TextColor="#CBD5E1" FontSize="13" />
+      <Editor Text="{Binding ManualUri}" HeightRequest="90" BackgroundColor="#111A2E" TextColor="White"
+              Placeholder="nopenwrt://pair?v=1&amp;npub=..." />
+
+      <Button Text="Sparuj ręcznie"
+              BackgroundColor="#0284C7" TextColor="White" HeightRequest="48" CornerRadius="12"
+              Command="{Binding PairManualCommand}" />
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

@@ -1,0 +1,8 @@
+config agent 'main'
+	option enabled '1'
+	option router_name 'OpenWrt'
+	option lan_ip '192.168.1.1'
+	option local_target 'http://127.0.0.1:80'
+	option allow_full_luci '1'
+	list relay 'wss://relay.gfmm.eu'
+	list allowed_tunnel_host 'relay.gfmm.eu'

@@ -1,0 +1,49 @@
+#!/bin/sh
+
+SOCK="/var/run/nopenwrtremote.sock"
+
+unix_get() {
+	local path="$1"
+	if command -v curl >/dev/null 2>&1; then
+		curl -sS --unix-socket "$SOCK" "http://localhost${path}" 2>/dev/null || echo '{"running":false}'
+	else
+		echo '{"running":false,"error":"curl not installed"}'
+	fi
+}
+
+unix_post() {
+	local path="$1"
+	local body="$2"
+	if command -v curl >/dev/null 2>&1; then
+		curl -sS --unix-socket "$SOCK" -X POST -H "Content-Type: application/json" -d "${body:-{}}" "http://localhost${path}" 2>/dev/null || echo '{"error":"agent unreachable"}'
+	else
+		echo '{"error":"curl not installed"}'
+	fi
+}
+
+case "$1" in
+	list)
+		echo '{"status":{},"start_pairing":{},"list_peers":{},"revoke_peer":{"npub":"str"}}'
+		;;
+	call)
+		case "$2" in
+			status)
+				unix_get "/status"
+				;;
+			start_pairing)
+				unix_post "/pairing/start" "{}"
+				;;
+			list_peers)
+				unix_get "/peers"
+				;;
+			revoke_peer)
+				read -r input
+				unix_post "/peers/revoke" "$input"
+				;;
+			*)
+				echo '{"error":"unknown method"}'
+				exit 1
+				;;
+		esac
+		;;
+esac

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:nOpenWrtRemote.App.ViewModels"
+             x:Class="nOpenWrtRemote.App.Views.RemoteLuciPage"
+             x:DataType="vm:RemoteLuciViewModel"
+             Title="Pełne LuCI (E2EE)"
+             BackgroundColor="#0B1120">
+
+  <Grid RowDefinitions="Auto,*">
+    <Grid Grid.Row="0" BackgroundColor="#111A2E" Padding="10,8" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+      <Border BackgroundColor="#052E16" StrokeShape="RoundRectangle 8" Padding="8,4" VerticalOptions="Center">
+        <Label Text="{Binding TunnelBadge}" TextColor="#4ADE80" FontSize="11" FontAttributes="Bold" />
+      </Border>
+      <Label Grid.Column="1" Text="{Binding CacheStats}" TextColor="#94A3B8" FontSize="11" VerticalOptions="Center" />
+      <Button Grid.Column="2" Text="Odśwież" FontSize="12" Padding="10,4" BackgroundColor="#1E293B" TextColor="White"
+              Clicked="OnReloadClicked" />
+      <Button Grid.Column="3" Text="Pulpit" FontSize="12" Padding="10,4" BackgroundColor="#0284C7" TextColor="White"
+              Command="{Binding BackToDashboardCommand}" />
+    </Grid>
+
+    <WebView Grid.Row="1" x:Name="LuciWebView" Navigating="OnWebViewNavigating" />
+  </Grid>
+</ContentPage>

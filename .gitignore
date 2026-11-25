@@ -1,0 +1,21 @@
+# Build & IDE artifacts
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Node / Cloudflare
+node_modules/
+.wrangler/
+dist/
+
+# CMake / OpenWrt SDK outputs
+openwrt/agent/build/
+openwrt/dist/
+openwrt/.cache/

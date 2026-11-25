@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:nOpenWrtRemote.App.ViewModels"
+             x:Class="nOpenWrtRemote.App.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Ustawienia"
+             BackgroundColor="#0B1120">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="16" Spacing="14">
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" Padding="16">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="Tożsamość urządzenia (Nostr npub)" FontAttributes="Bold" TextColor="White" />
+          <Label Text="{Binding DeviceNpub}" TextColor="#94A3B8" FontSize="12" />
+          <Button Text="Kopiuj npub" BackgroundColor="#1E293B" TextColor="#38BDF8" CornerRadius="10"
+                  Command="{Binding CopyNpubCommand}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" Padding="16">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="Domyślny przekaźnik Nostr (WSS)" FontAttributes="Bold" TextColor="White" />
+          <Entry Text="{Binding DefaultRelay}" BackgroundColor="#0B1120" TextColor="White" />
+          <Button Text="Zapisz relay" BackgroundColor="#0284C7" TextColor="White" CornerRadius="10"
+                  Command="{Binding SaveRelayCommand}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeShape="RoundRectangle 14" Padding="16">
+        <Grid ColumnDefinitions="*,Auto">
+          <VerticalStackLayout>
+            <Label Text="Blokada biometryczna" FontAttributes="Bold" TextColor="White" />
+            <Label Text="Wymagaj odcisku palca / PIN przy starcie" FontSize="12" TextColor="#94A3B8" />
+          </VerticalStackLayout>
+          <Switch Grid.Column="1" IsToggled="{Binding BiometricEnabled}" OnColor="#38BDF8" />
+        </Grid>
+      </Border>
+
+      <Button Text="Wyczyść lokalny cache /luci-static/*" BackgroundColor="#1E293B" TextColor="White" CornerRadius="12"
+              Command="{Binding ClearLuciCacheCommand}" />
+
+      <Button Text="Polityka prywatności (gfmm.eu)" BackgroundColor="#1E293B" TextColor="#38BDF8" CornerRadius="12"
+              Command="{Binding OpenPrivacyPolicyCommand}" />
+
+      <Label Text="{Binding InfoMessage}" TextColor="#4ADE80" FontSize="13" HorizontalTextAlignment="Center" />
+      <Label Text="Protokół NORT-1 • NIP-44 v2 + Ephemeral ECDH + AES-256-GCM" FontSize="11" TextColor="#64748B" HorizontalTextAlignment="Center" />
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>
