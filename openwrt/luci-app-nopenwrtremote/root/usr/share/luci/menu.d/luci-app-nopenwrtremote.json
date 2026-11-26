@@ -15,7 +15,7 @@
     "order": 1,
     "action": {
       "type": "view",
-      "path": "nopenwrtremote/status"
+      "path": "nopenwrtremote/overview"
     }
   },
   "admin/services/nopenwrtremote/settings": {

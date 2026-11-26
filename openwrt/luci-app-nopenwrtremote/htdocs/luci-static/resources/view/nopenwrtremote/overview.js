@@ -34,7 +34,7 @@ function loadQrScript() {
 	if (window.NortQrCode && typeof window.NortQrCode.encode === 'function') return Promise.resolve();
 	return new Promise(function (resolve, reject) {
 		var s = document.createElement('script');
-		s.src = L.resource('nopenwrtremote/qrcode.js') + '?v=2';
+		s.src = L.resource('nopenwrtremote/qrcode.js') + '?v=3';
 		s.onload = resolve;
 		s.onerror = function () { reject(new Error('Nie udało się załadować qrcode.js')); };
 		document.head.appendChild(s);
